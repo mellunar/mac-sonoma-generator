@@ -40,6 +40,7 @@
 		"@phosphor-icons/web": "^2.1.2",
 		"chart.js": "^4.5.1",
 		"date-fns": "^4.1.0",
-		"modern-screenshot": "^4.7.0"
+		"modern-screenshot": "^4.7.0",
+		"zod": "^4.4.2"
 	}
 }

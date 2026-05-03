@@ -4,32 +4,27 @@
 	import { page } from '$app/state';
 	import type { RouteId } from '$app/types';
 	import formatDate from '$lib/core/functions/format-date.function';
-	import { onMount } from 'svelte';
+	import { setContext } from 'svelte';
+	import { ModalService } from '$lib/core/state/modal.state.svelte';
+	import ModalContainer from '$lib/shared/components/modal-container/modal-container.svelte';
+
+	setContext('modalService', new ModalService());
 
 	const navigation: { url: RouteId; name: string }[] = [
 		{ url: '/image-frame', name: 'Image Frame' },
 		{ url: '/video-frame', name: 'Video Frame' },
 		{ url: '/pizza-chart', name: 'Pizza Chart' },
+		//{ url: '/developing', name: 'Developing' },
 	];
 
 	let { children } = $props();
 	let currentTime = $state(new Date());
 	let minutes = $state(-1);
-	let hasFocus = $state(false);
-
-	onMount(() => {
-		hasFocus = true;
-		updateTime();
-	});
 
 	function updateTime() {
-		if (hasFocus && new Date().getMinutes() !== minutes) {
+		if (new Date().getMinutes() !== minutes) {
 			currentTime = new Date();
 		}
-
-		setInterval(() => {
-			updateTime();
-		}, 1000);
 	}
 </script>
 
@@ -58,10 +53,6 @@
 	</main>
 </div>
 
-<svelte:window
-	on:blur={() => {
-		hasFocus = false;
-	}}
-	on:focus={() => {
-		hasFocus = true;
-	}} />
+<ModalContainer />
+
+<svelte:window on:blur={updateTime} on:focus={updateTime} />

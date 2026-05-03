@@ -1,6 +1,7 @@
 <script lang="ts">
 	import '$lib/styles/mac.scss';
 	import './pizza-chart.scss';
+	import { getContext } from 'svelte';
 	import exportAsPng from '$lib/core/functions/export-as-png.funcion';
 	import type { ChartData, ChartItem } from './pizza-chart.interface';
 	import { chartPalette } from './pizza-chart.config';
@@ -13,12 +14,16 @@
 	import BottomBar from '$lib/shared/components/bottom-bar/bottom-bar.svelte';
 	import Icon from '$lib/shared/components/icon/icon.svelte';
 	import FieldNumber from '$lib/shared/components/field-number/field-number.svelte';
+	import type { ModalService } from '$lib/core/state/modal.state.svelte';
+	import LoadJsonModal from '$lib/core/modules/pizza-chart/components/load-json-modal.svelte';
 
 	const chartConfig = {
 		currency: '', // deixe vazio '' para valores sem símbolo
 		decimals: 0, // casas decimais quando necessário
 		unit: '', // sufixo opcional, ex: 'kg', 'pts', 'h'
 	};
+
+	const modalService = getContext<ModalService>('modalService');
 
 	let element: HTMLElement;
 	let canvas: HTMLCanvasElement;
@@ -70,6 +75,11 @@
 		if (chartData.length < 2) return;
 
 		chartData.splice(index, 1);
+	}
+
+	function clearChart() {
+		if (chartData.length < 2) return;
+		chartData = [emptyRow()];
 	}
 
 	function buildChart() {
@@ -149,6 +159,19 @@
 			exporting = false;
 		});
 	}
+
+	async function openJsonModal() {
+		const modal = modalService.create({
+			component: LoadJsonModal,
+		});
+
+		await modal.onDismiss.then((data: unknown) => {
+			if (data) {
+				chartData = data as ChartData[];
+				buildChart();
+			}
+		});
+	}
 </script>
 
 <div class="l-printable-window--form">
@@ -193,8 +216,11 @@
 				</form>
 
 				<div class="form-footer">
+					<button class="button button-default" onclick={openJsonModal}>Add From JSON</button>
 					<button class="button button-default" onclick={addRow}>Add Item</button>
 					<button class="button button-default" onclick={buildChart}>Build Chart</button>
+					<button class="button button-destructive" disabled={chartData.length < 2} onclick={clearChart}
+						>Clear Chart</button>
 					<button class="button button-primary" disabled={exporting} onclick={generateImage}>Save as Image</button>
 				</div>
 			</div>
