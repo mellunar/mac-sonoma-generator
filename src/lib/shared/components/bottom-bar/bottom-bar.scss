@@ -1,0 +1,19 @@
+.bottom-bar {
+  background: #f0eff4;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 28px;
+  width: 100%;
+  position: relative;
+  z-index: 5;
+
+  span {
+    margin-top: calc(-0.5lh + 0.35em);
+  }
+
+  var {
+    margin-bottom: 0.14lh;
+  }
+}
