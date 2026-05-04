@@ -15,11 +15,18 @@
 	let value = $state('');
 
 	function parseValue() {
+		if (!value) return;
+
 		const data = `[${value}]`;
 		const result = dataSchema.safeParse(JSON.parse(data));
 
 		if (!result.success) {
 			error = result.error.message;
+			return;
+		}
+
+		if (result.data.length < 1) {
+			error = 'Array is empty!';
 			return;
 		}
 
@@ -34,18 +41,22 @@
 
 	<h4 class="e-modal__title">Load data from JSON</h4>
 
-	<p>Insert in the textarea below the contents from a JSON array. A maximum of 10 items will be loaded.</p>
+	<p>
+		Insert in the textarea below the contents from a JSON array which each item has this structure: <code
+			class="text-blue">{'{"label":"Name","value":0}'}</code
+		>.<!-- A maximum of 10 items will be loaded.-->
+	</p>
 
 	<div>
 		<FieldTextarea id="chart-json-modal" bind:value />
 	</div>
 
 	{#if error}
-		<p class="error-text">{error}</p>
+		<p class="text-error">{error}</p>
 	{/if}
 
 	<div class="e-modal__footer e-modal__footer-end">
 		<button class="button button-default" onclick={() => ondismiss()}>Cancel</button>
-		<button class="button button-primary" onclick={() => parseValue()}>Load</button>
+		<button class="button button-primary" disabled={!value} onclick={() => parseValue()}>Load</button>
 	</div>
 </div>

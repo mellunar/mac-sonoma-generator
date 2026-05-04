@@ -13,6 +13,11 @@
   min-width: 300px;
   min-height: 200px;
   padding: 20px;
+  user-select: none;
+
+  code {
+    user-select: text;
+  }
 
   &--alert {
     max-width: 340px;
