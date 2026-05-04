@@ -205,7 +205,7 @@
 							<FieldNumber id={`chart-value-${index}`} label="Value" min={0} bind:value={formItem.value} />
 
 							<button
-								class="button button-destructive align-bottom"
+								class="button button-destructive chart-form-row-button align-bottom"
 								title="delete"
 								type="button"
 								onclick={() => removeRow(index)}>
