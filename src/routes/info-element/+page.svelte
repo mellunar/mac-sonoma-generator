@@ -3,6 +3,7 @@
 	import exportAsPng from '$lib/core/functions/export-as-png.funcion';
 	import TopBar from '$lib/shared/components/top-bar/top-bar.svelte';
 	import FieldInput from '$lib/shared/components/field-input/field-input.svelte';
+	import FieldTextarea from '$lib/shared/components/field-textarea/field-textarea.svelte';
 	import FieldRadio from '$lib/shared/components/field-radio/field-radio.svelte';
 	import FieldCheckbox from '$lib/shared/components/field-checkbox/field-checkbox.svelte';
 
@@ -47,7 +48,7 @@
 					<FieldInput id="textPrimary" label="Primary Text:" bind:value={textPrimary} />
 
 					{#if textType === 'notification'}
-						<FieldInput id="textSecondary" label="Secondary Text:" bind:value={textSecondary} />
+						<FieldTextarea id="textSecondary" label="Secondary Text:" bind:value={textSecondary} />
 					{/if}
 
 					{#if textType === 'popover' || textType === 'notification'}
