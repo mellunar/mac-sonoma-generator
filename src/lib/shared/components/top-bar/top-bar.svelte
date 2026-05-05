@@ -8,7 +8,7 @@
 		title?: string;
 	}
 
-	const apps = ['preview', 'quicktime'];
+	const apps = ['preview', 'pdf', 'quicktime'];
 
 	let { app = 'generic', isFullscreen = false, title = '' }: TopBarProps = $props();
 </script>
@@ -20,9 +20,9 @@
 		<div class="top-bar-button"></div>
 	</div>
 
-	{#if title && (app === 'safari' || app === 'preview')}
+	{#if title && (app === 'safari' || app === 'preview' || app === 'pdf')}
 		<div class="top-bar-navigation" class:top-bar-fullscreen={isFullscreen}>
-			<div class="top-bar-action" class:top-bar-action-disabled={app === 'preview'}>
+			<div class="top-bar-action" class:top-bar-action-disabled={app === 'preview' || app === 'pdf'}>
 				<img alt="" src="/mac/chevron-left.svg" />
 			</div>
 			<div class="top-bar-action top-bar-action-disabled">
@@ -49,6 +49,10 @@
 				<img alt="" src="/mac/quicktime-icon.svg" />
 			{/if}
 
+			{#if app === 'pdf'}
+				<img alt="" src="/mac/pdf-icon.svg" />
+			{/if}
+
 			<span>{title}</span>
 
 			{#if app === 'safari'}
@@ -71,6 +75,12 @@
 		{#if title && app === 'quicktime'}
 			<div class="top-bar-action"><img alt="" src="/mac/share.svg" /></div>
 			<div class="top-bar-action"><img alt="" src="/mac/fullscreen.svg" /></div>
+		{/if}
+
+		{#if title && app === 'pdf'}
+			<div class="top-bar-action"><img alt="" src="/mac/markup.svg" /></div>
+			<div class="top-bar-action"><img alt="" src="/mac/share.svg" /></div>
+			<div class="top-bar-action"><img alt="" src="/mac/sidebar.svg" /></div>
 		{/if}
 	</div>
 </div>

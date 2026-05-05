@@ -42,7 +42,6 @@
 						<span>App:</span>
 						<FieldRadio label="Generic" id="generic" value="generic" bind:group={windowApp} />
 						<FieldRadio label="Safari" id="safari" value="safari" bind:group={windowApp} />
-						<FieldRadio label="Preview" id="preview" value="preview" bind:group={windowApp} />
 						<FieldRadio label="QuickTime" id="quicktime" value="quicktime" bind:group={windowApp} />
 					</div>
 
