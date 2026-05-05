@@ -14,6 +14,7 @@
 		{ url: '/image-frame', name: 'Image Frame' },
 		{ url: '/video-frame', name: 'Video Frame' },
 		{ url: '/pizza-chart', name: 'Pizza Chart' },
+		{ url: '/info-element', name: 'Info Element' },
 		//{ url: '/developing', name: 'Developing' },
 	];
 
