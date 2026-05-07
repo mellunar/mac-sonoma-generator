@@ -28,7 +28,7 @@
 	let element: HTMLElement;
 	let canvas: HTMLCanvasElement;
 	let chart: Chart;
-	let exporting = $state(true);
+	let exporting = $state(false);
 	let chartData: ChartData[] = $state([{ label: '', value: 0 }]);
 
 	let windowTitle = $state('');

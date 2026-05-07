@@ -7,13 +7,22 @@
 		label: string;
 		group: string;
 		value: string;
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		onchange?: any;
 	}
 
-	let { disabled = false, label = '', group = $bindable(''), value = '', id = '' }: FieldRadioProps = $props();
+	let {
+		disabled = false,
+		label = '',
+		group = $bindable(''),
+		value = '',
+		id = '',
+		onchange = () => {},
+	}: FieldRadioProps = $props();
 </script>
 
 <label class="field-input__radio" for={id}>
-	<input {id} name={id} type="radio" bind:group {disabled} {value} />
+	<input {id} name={id} type="radio" bind:group {disabled} {value} {onchange} />
 
 	<div class="field-input__radio-circle"></div>
 
