@@ -16,14 +16,20 @@
 	let windowApp = $state('generic');
 	let windowSubtitle = $state('');
 	let isFullscreen = $state(false);
+	let hasMinimumSizes = $state(false);
 	let windowBackground = $state('white');
 	let windowBackgroundCustom = $state('#0A1317');
 	let isAi = $state(false);
 	let shouldCover = $state(false);
+	let imgSource = $state('input');
 	let imgUrl = $state('https://placehold.co/264x354');
 	let imgHeight: number | undefined = $state();
 	let imgWidth: number | undefined = $state();
 	let containerWidth: number | undefined = $state();
+
+	function resetImage() {
+		imgUrl = 'https://placehold.co/264x354';
+	}
 
 	function handleFile(event: Event & { currentTarget: HTMLInputElement }) {
 		const file = event.currentTarget.files![0];
@@ -47,6 +53,27 @@
 			exporting = false;
 		});
 	}
+
+	async function parseClipboardData() {
+		const items = await navigator.clipboard.read().catch((err) => {
+			console.error(err);
+		});
+
+		if (!items || items.length < 1) {
+			return;
+		}
+
+		for (let item of items as ClipboardItems) {
+			for (let type of item.types) {
+				if (type.startsWith('image/')) {
+					item.getType(type).then((imageBlob) => {
+						imgUrl = window.URL.createObjectURL(imageBlob);
+					});
+					return true;
+				}
+			}
+		}
+	}
 </script>
 
 <div class="l-printable-window--form">
@@ -62,6 +89,11 @@
 
 					<div class="form-row">
 						<FieldCheckbox id="isFullscreen" label="Is Fullscreen?" bind:checked={isFullscreen} />
+						<FieldCheckbox
+							id="hasMinimumSizes"
+							label="Has Minimum Sizes?"
+							disabled={!isFullscreen}
+							bind:checked={hasMinimumSizes} />
 						<FieldCheckbox id="shouldCover" label="Should Image Cover?" bind:checked={shouldCover} />
 						<FieldCheckbox id="isAi" label="Is AI?" bind:checked={isAi} />
 					</div>
@@ -90,9 +122,32 @@
 							bind:value={windowBackgroundCustom} />
 					{/if}
 
-					<div class="form-item">
-						<FieldFile accept="image/*" id="imageToHandle" handleFiles={handleFile} />
+					<div class="form-row">
+						<span>Image Source:</span>
+						<FieldRadio
+							label="Input"
+							id="source-input"
+							value="input"
+							onchange={resetImage}
+							bind:group={imgSource} />
+						<FieldRadio label="URL" id="source-url" value="url" onchange={resetImage} bind:group={imgSource} />
+						<FieldRadio
+							label="Paste"
+							id="source-paste"
+							value="paste"
+							onchange={resetImage}
+							bind:group={imgSource} />
 					</div>
+
+					{#if imgSource === 'input'}
+						<div class="form-item">
+							<FieldFile accept="image/*" id="imageToHandle" handleFiles={handleFile} />
+						</div>
+					{:else if imgSource === 'url'}
+						<FieldInput id="imgSourceUrl" label="URL:" bind:value={imgUrl} />
+					{:else}
+						<button class="button button-default" type="button" onclick={parseClipboardData}>Paste</button>
+					{/if}
 				</form>
 
 				<div class="form-footer">
@@ -112,7 +167,7 @@
 
 			<div
 				class="content"
-				class:content-fullscreen={isFullscreen}
+				class:content-fullscreen={isFullscreen && hasMinimumSizes}
 				class:content-ai={isAi}
 				style:--window-bg={windowBackground}
 				style:--image-size={containerWidth}
