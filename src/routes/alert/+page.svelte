@@ -127,7 +127,8 @@
 		{/if}
 
 		{#if alertContent}
-			<p class="alert-page__content">{alertContent}</p>
+			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+			<p class="alert-page__content">{@html alertContent}</p>
 		{/if}
 	</div>
 </div>
