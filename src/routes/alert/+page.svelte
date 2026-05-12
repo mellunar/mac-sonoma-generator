@@ -16,7 +16,7 @@
 	let alertContent = $state('');
 	let alertIconType = $state('none');
 	let alertIcon = $state('');
-	let alertIconStyle = $state('regular');
+	let alertIconStyle: 'regular' | 'fill' | 'bold' = $state('regular');
 	let alertMode = $state('shadow');
 
 	function resetIcon() {
@@ -121,7 +121,7 @@
 	<div class="alert-page">
 		{#if alertIcon !== '' && alertIconType === 'icon'}
 			<div class="alert-page__icon">
-				<span><Icon name={alertIcon} class={alertIconStyle === 'regular' ? '' : 'ph-' + alertIconStyle} /></span>
+				<span><Icon name={alertIcon} weight={alertIconStyle} /></span>
 			</div>
 		{/if}
 
