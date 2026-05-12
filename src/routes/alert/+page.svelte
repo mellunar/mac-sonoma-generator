@@ -121,7 +121,7 @@
 	<div class="alert-page">
 		{#if alertIcon !== '' && alertIconType === 'icon'}
 			<div class="alert-page__icon">
-				<span><Icon name={alertIcon} class={alertIconStyle === 'regular' ? 'ph-' + alertIconStyle : ''} /></span>
+				<span><Icon name={alertIcon} class={alertIconStyle === 'regular' ? '' : 'ph-' + alertIconStyle} /></span>
 			</div>
 		{/if}
 
