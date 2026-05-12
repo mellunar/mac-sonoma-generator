@@ -16,10 +16,12 @@
 	let alertContent = $state('');
 	let alertIconType = $state('none');
 	let alertIcon = $state('');
+	let alertIconStyle = $state('regular');
 	let alertMode = $state('shadow');
 
 	function resetIcon() {
 		alertIcon = '';
+		alertIconStyle = 'regular';
 	}
 
 	function handleFile(event: Event & { currentTarget: HTMLInputElement }) {
@@ -81,6 +83,13 @@
 
 					{#if alertIconType === 'icon'}
 						<FieldInput id="alertIcon" label="Phosphoricon Icon Name:" bind:value={alertIcon} />
+
+						<div class="form-row">
+							<span>Alert Icon Style:</span>
+							<FieldRadio label="Regular" id="icon-style-regular" value="regular" bind:group={alertIconStyle} />
+							<FieldRadio label="Fill" id="icon-style-fill" value="fill" bind:group={alertIconStyle} />
+							<FieldRadio label="Bold" id="icon-style-bold" value="bold" bind:group={alertIconStyle} />
+						</div>
 					{/if}
 
 					{#if alertIconType === 'url'}
@@ -112,7 +121,7 @@
 	<div class="alert-page">
 		{#if alertIcon !== '' && alertIconType === 'icon'}
 			<div class="alert-page__icon">
-				<span><Icon name={alertIcon} /></span>
+				<span><Icon name={alertIcon} class={alertIconStyle === 'regular' ? 'ph-' + alertIconStyle : ''} /></span>
 			</div>
 		{/if}
 

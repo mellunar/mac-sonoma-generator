@@ -15,7 +15,7 @@
 	let windowTitle = $state('');
 	let windowApp = $state('generic');
 	let windowSubtitle = $state('');
-	let isFullscreen = $state(false);
+	let isFullscreen = $state(true);
 	let hasMinimumSizes = $state(false);
 	let windowBackground = $state('white');
 	let windowBackgroundCustom = $state('#0A1317');
