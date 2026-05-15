@@ -6,6 +6,8 @@
 	import FieldTextarea from '$lib/shared/components/field-textarea/field-textarea.svelte';
 	import FieldRadio from '$lib/shared/components/field-radio/field-radio.svelte';
 	import FieldCheckbox from '$lib/shared/components/field-checkbox/field-checkbox.svelte';
+	import FormImage from '$lib/shared/components/form-image/form-image.svelte';
+	import type { FormImageSource } from '$lib/shared/components/form-image/form-image.interface';
 
 	let element: HTMLElement;
 	let exporting = $state(false);
@@ -13,8 +15,12 @@
 	let textType = $state('tooltip');
 	let textPrimary = $state('');
 	let textSecondary = $state('');
+	let textAvatar = $state('');
+	let textAvatarSource: FormImageSource = $state('input');
+	let textAvatarPosition = $state('left');
 	let isFullscreen = $state(true);
 	let insideWindow = $state(false);
+	let hasAvatar = $state(false);
 
 	async function generateImage() {
 		if (exporting) return;
@@ -51,10 +57,22 @@
 						<FieldTextarea id="textSecondary" label="Secondary Text:" bind:value={textSecondary} />
 					{/if}
 
-					{#if textType === 'popover' || textType === 'notification'}
-						<div class="form-row">
+					<div class="form-row">
+						{#if textType === 'popover' || textType === 'notification'}
 							<FieldCheckbox id="insideWindow" label="Is Inside Window?" bind:checked={insideWindow} />
-						</div>
+						{/if}
+						{#if textType === 'notification'}
+							<FieldCheckbox id="hasAvatar" label="Has Avatar?" bind:checked={hasAvatar} />
+						{/if}
+						{#if textType === 'notification' && hasAvatar}
+							<span>Avatar Position: </span>
+							<FieldRadio label="Left" id="avatar-left" value="left" bind:group={textAvatarPosition} />
+							<FieldRadio label="Right" id="avatar-right" value="right" bind:group={textAvatarPosition} />
+						{/if}
+					</div>
+
+					{#if textType === 'notification' && hasAvatar}
+						<FormImage bind:imgUrl={textAvatar} bind:imgSource={textAvatarSource} />
 					{/if}
 				</form>
 
@@ -76,6 +94,10 @@
 			class:info-element-notification={textType === 'notification'}
 			class:info-element-notification-inside={textType === 'notification' && insideWindow}
 			class:info-element-tooltip={textType === 'tooltip'}>
+			{#if textType === 'notification' && textAvatar && textAvatarPosition === 'left'}
+				<img class="info-element-notification-avatar" alt="" src={textAvatar} />
+			{/if}
+
 			<div class="info-element-text">
 				<div class="info-element-primary">
 					{textPrimary}
@@ -89,7 +111,12 @@
 			</div>
 
 			{#if textType === 'notification'}
-				<div class="info-element-right">agora</div>
+				<div class="info-element-right">
+					<span>agora</span>
+					{#if textAvatar && textAvatarPosition === 'right'}
+						<img class="info-element-notification-avatar" alt="" src={textAvatar} />
+					{/if}
+				</div>
 			{/if}
 		</div>
 	</div>

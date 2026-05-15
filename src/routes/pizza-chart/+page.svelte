@@ -1,5 +1,4 @@
 <script lang="ts">
-	import '$lib/styles/mac.scss';
 	import './pizza-chart.scss';
 	import { getContext } from 'svelte';
 	import exportAsPng from '$lib/core/functions/export-as-png.funcion';

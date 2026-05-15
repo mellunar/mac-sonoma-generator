@@ -1,5 +1,4 @@
 <script lang="ts">
-	import '$lib/styles/mac.scss';
 	import exportAsPng from '$lib/core/functions/export-as-png.funcion';
 	import TopBar from '$lib/shared/components/top-bar/top-bar.svelte';
 	import FieldInput from '$lib/shared/components/field-input/field-input.svelte';
@@ -7,7 +6,8 @@
 	import BottomBar from '$lib/shared/components/bottom-bar/bottom-bar.svelte';
 	import FieldCheckbox from '$lib/shared/components/field-checkbox/field-checkbox.svelte';
 	import FieldRadio from '$lib/shared/components/field-radio/field-radio.svelte';
-	import FieldFile from '$lib/shared/components/field-file/field-file.svelte';
+	import FormImage from '$lib/shared/components/form-image/form-image.svelte';
+	import type { FormImageSource } from '$lib/shared/components/form-image/form-image.interface';
 
 	let element: HTMLElement;
 	let exporting = $state(false);
@@ -21,28 +21,11 @@
 	let windowBackgroundCustom = $state('#0A1317');
 	let isAi = $state(false);
 	let shouldCover = $state(false);
-	let imgSource = $state('input');
+	let imgSource: FormImageSource = $state('input');
 	let imgUrl = $state('https://placehold.co/264x354');
 	let imgHeight: number | undefined = $state();
 	let imgWidth: number | undefined = $state();
 	let containerWidth: number | undefined = $state();
-
-	function resetImage() {
-		imgUrl = 'https://placehold.co/264x354';
-	}
-
-	function handleFile(event: Event & { currentTarget: HTMLInputElement }) {
-		const file = event.currentTarget.files![0];
-		if (!file) return;
-
-		const reader = new FileReader();
-
-		reader.onload = (e) => {
-			imgUrl = e.target!.result as string;
-		};
-
-		reader.readAsDataURL(file);
-	}
 
 	async function generateImage() {
 		if (exporting) return;
@@ -52,27 +35,6 @@
 		await exportAsPng(element).finally(() => {
 			exporting = false;
 		});
-	}
-
-	async function parseClipboardData() {
-		const items = await navigator.clipboard.read().catch((err) => {
-			console.error(err);
-		});
-
-		if (!items || items.length < 1) {
-			return;
-		}
-
-		for (let item of items as ClipboardItems) {
-			for (let type of item.types) {
-				if (type.startsWith('image/')) {
-					item.getType(type).then((imageBlob) => {
-						imgUrl = window.URL.createObjectURL(imageBlob);
-					});
-					return true;
-				}
-			}
-		}
 	}
 </script>
 
@@ -122,32 +84,7 @@
 							bind:value={windowBackgroundCustom} />
 					{/if}
 
-					<div class="form-row">
-						<span>Image Source:</span>
-						<FieldRadio
-							label="Input"
-							id="source-input"
-							value="input"
-							onchange={resetImage}
-							bind:group={imgSource} />
-						<FieldRadio label="URL" id="source-url" value="url" onchange={resetImage} bind:group={imgSource} />
-						<FieldRadio
-							label="Paste"
-							id="source-paste"
-							value="paste"
-							onchange={resetImage}
-							bind:group={imgSource} />
-					</div>
-
-					{#if imgSource === 'input'}
-						<div class="form-item">
-							<FieldFile accept="image/*" id="imageToHandle" handleFiles={handleFile} />
-						</div>
-					{:else if imgSource === 'url'}
-						<FieldInput id="imgSourceUrl" label="URL:" bind:value={imgUrl} />
-					{:else}
-						<button class="button button-default" type="button" onclick={parseClipboardData}>Paste</button>
-					{/if}
+					<FormImage bind:imgUrl bind:imgSource nullable={false} />
 				</form>
 
 				<div class="form-footer">

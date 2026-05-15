@@ -1,5 +1,4 @@
 <script lang="ts">
-	import '$lib/styles/mac.scss';
 	import '$lib/styles/alert-page.scss';
 	import exportAsPng from '$lib/core/functions/export-as-png.funcion';
 	import TopBar from '$lib/shared/components/top-bar/top-bar.svelte';
